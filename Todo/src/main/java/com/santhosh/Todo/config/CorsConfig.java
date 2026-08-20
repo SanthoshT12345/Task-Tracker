@@ -13,6 +13,8 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
 
         CorsConfiguration config = new CorsConfiguration();
+         config.addAllowedOrigin("https://taskprogresstrack.netlify.app/");
+
 
         config.addAllowedOrigin("http://localhost:5173");
 
