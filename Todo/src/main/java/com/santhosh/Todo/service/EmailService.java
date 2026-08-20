@@ -93,8 +93,13 @@ public class EmailService {
 
         } catch (Exception e) {
 
+            // Print the actual SMTP/email error in Render logs
+            e.printStackTrace();
+
             throw new RuntimeException(
-                    "Unable to send verification email"
+                    "Unable to send verification email: "
+                            + e.getMessage(),
+                    e
             );
         }
     }
