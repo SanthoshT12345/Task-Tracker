@@ -1,43 +1,31 @@
 package com.santhosh.Todo.service;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.resend.Resend;
+import com.resend.core.exception.ResendException;
+import com.resend.services.emails.model.CreateEmailOptions;
+import com.resend.services.emails.model.CreateEmailResponse;
 import com.santhosh.Todo.entity.User;
-
-import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class EmailService {
 
-    private final JavaMailSender mailSender;
+    private final Resend resend;
 
-    @Value("${spring.mail.username}")
+    @Value("${resend.from-email}")
     private String fromEmail;
 
-    public EmailService(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
+    public EmailService(
+            @Value("${resend.api-key}") String apiKey) {
+
+        this.resend = new Resend(apiKey);
     }
 
     public void sendVerificationOtp(User user, String otp) {
 
         try {
-
-            MimeMessage message =
-                    mailSender.createMimeMessage();
-
-            MimeMessageHelper helper =
-                    new MimeMessageHelper(message, true);
-
-            helper.setFrom(fromEmail);
-
-            helper.setTo(user.getEmail());
-
-            helper.setSubject(
-                    "Progress Tracker - Verify Your Account"
-            );
 
             String name = user.getName() != null
                     ? user.getName()
@@ -87,18 +75,29 @@ public class EmailService {
                     </html>
                     """.formatted(name, otp);
 
-            helper.setText(html, true);
+            CreateEmailOptions params =
+                    CreateEmailOptions.builder()
+                            .from(fromEmail)
+                            .to(user.getEmail())
+                            .subject("Progress Tracker - Verify Your Account")
+                            .html(html)
+                            .build();
 
-            mailSender.send(message);
+            CreateEmailResponse response =
+                    resend.emails().send(params);
 
-        } catch (Exception e) {
+            System.out.println(
+                    "Verification email sent. ID: "
+                    + response.getId()
+            );
 
-            // Print the actual SMTP/email error in Render logs
+        } catch (ResendException e) {
+
             e.printStackTrace();
 
             throw new RuntimeException(
                     "Unable to send verification email: "
-                            + e.getMessage(),
+                    + e.getMessage(),
                     e
             );
         }
