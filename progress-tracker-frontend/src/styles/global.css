@@ -1,0 +1,118 @@
+/* =========================================
+   GLOBAL RESET
+========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, sans-serif;
+
+    background: var(--bg-primary);
+    color: var(--text-primary);
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
+}
+
+
+/* =========================================
+   LIGHT THEME
+========================================= */
+
+:root {
+    --bg-primary: #eef2ff;
+    --bg-card: #ffffff;
+
+    --text-primary: #111827;
+    --text-secondary: #64748b;
+
+    --border-color: #e5e7eb;
+
+    --sidebar-bg:  #ffffff;
+    --sidebar-text: black ;
+    
+    --sidebar-hover: rgba(225, 223, 230, 0.08);
+    --sidebar-border: rgba(35, 15, 219, 0.06);
+}
+
+
+/* =========================================
+   DARK THEME
+========================================= */
+
+html.dark-theme {
+    --bg-primary: #0f172a;
+    --bg-card: #1e293b;
+
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+
+    --border-color: #334155;
+
+    --sidebar-bg: #0b1535;
+    --sidebar-text: #ffffff;
+    --sidebar-text-muted: rgba(255, 255, 255, 0.75);
+    --sidebar-hover: rgba(255, 255, 255, 0.08);
+    --sidebar-border: rgba(255, 255, 255, 0.06);
+}
+
+
+/* =========================================
+   APPLICATION LAYOUT
+========================================= */
+
+.dashboard {
+    min-height: 100vh;
+    width: 100%;
+}
+
+
+/*
+   Sidebar is fixed at 260px.
+   Therefore main content must reserve 260px.
+*/
+
+.main-content {
+    margin-left: 260px;
+
+    width: calc(100% - 260px);
+
+    min-height: 100vh;
+
+    padding: 0 30px 30px 30px;
+
+    transition:
+        margin-left 0.3s ease,
+        width 0.3s ease;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+    .main-content {
+        margin-left: 0;
+
+        width: 100%;
+
+        padding:
+            20px
+            20px
+            85px
+            20px;
+    }
+}

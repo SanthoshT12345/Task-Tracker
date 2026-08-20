@@ -1,0 +1,138 @@
+.dashboard {
+    display: flex;
+}
+
+.main-content {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+
+        padding: 0 16px 80px;
+
+        box-sizing: border-box;
+    }
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    color: var(--text-primary);
+
+    border-radius: 15px;
+    padding: 20px;
+
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
+}
+
+.icon-box {
+    width: 60px;
+    height: 60px;
+
+    border-radius: 15px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+    font-size: 25px;
+}
+
+.dashboard-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+}
+
+.task-card,
+.progress-card {
+    background: var(--bg-card);
+    color: var(--text-primary);
+
+    border-radius: 15px;
+    padding: 25px;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
+}
+
+.task-card h3,
+.progress-card h3 {
+    margin-bottom: 20px;
+    color: var(--text-primary);
+}
+
+.task-card ul {
+    list-style: none;
+}
+
+.task-card li {
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+.task-card button {
+    margin-top: 20px;
+    width: 100%;
+
+    border: none;
+
+    background: #2563EB;
+    color: white;
+
+    padding: 12px;
+    border-radius: 10px;
+
+    cursor: pointer;
+}
+
+.progress {
+    background: var(--border-color);
+
+    height: 25px;
+    border-radius: 20px;
+
+    overflow: hidden;
+    margin: 25px 0;
+}
+
+.progress-fill {
+    width: 65%;
+    height: 100%;
+
+    background: #2563EB;
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 13px;
+    font-weight: bold;
+}

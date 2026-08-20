@@ -1,0 +1,138 @@
+.profile-avatar {
+    width: 150px;
+    height: 150px;
+
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    background: #2563eb;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 60px;
+    font-weight: 700;
+}
+
+.profile-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+}
+
+.profile-card {
+    background: var(--bg-card);
+    color: var(--text-primary);
+
+    padding: 30px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
+
+    text-align: center;
+}
+
+.profile-card img {
+    width: 180px;
+    height: 180px;
+
+    border-radius: 50%;
+
+    margin-bottom: 20px;
+}
+
+.profile-card h2 {
+    margin-bottom: 10px;
+    color: var(--text-primary);
+}
+
+.profile-card p {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+
+.profile-card button {
+    width: 100%;
+
+    padding: 12px;
+
+    background: #2563EB;
+    color: white;
+
+    border: none;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.info-card,
+.stats-card {
+    background: var(--bg-card);
+    color: var(--text-primary);
+
+    padding: 25px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
+}
+
+.info-card h3,
+.stats-card h3 {
+    margin-bottom: 25px;
+    color: var(--text-primary);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+
+    border-bottom: 1px solid var(--border-color);
+
+    padding-bottom: 10px;
+
+    color: var(--text-primary);
+}
+
+.stats-grid-profile {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.stats-grid-profile div {
+    background: var(--bg-primary);
+
+    color: var(--text-primary);
+
+    padding: 25px;
+
+    text-align: center;
+
+    border-radius: 12px;
+}
+
+.stats-grid-profile h1 {
+    color: #2563EB;
+}
+
+@media(max-width:900px) {
+
+    .profile-container {
+        grid-template-columns: 1fr;
+    }
+
+}
