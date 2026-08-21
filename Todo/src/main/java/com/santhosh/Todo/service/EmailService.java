@@ -1,27 +1,28 @@
 package com.santhosh.Todo.service;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.resend.Resend;
-import com.resend.core.exception.ResendException;
-import com.resend.services.emails.model.CreateEmailOptions;
-import com.resend.services.emails.model.CreateEmailResponse;
 import com.santhosh.Todo.entity.User;
 
 @Service
 public class EmailService {
 
-    private final Resend resend;
+    @Value("${brevo.api-key}")
+    private String apiKey;
 
-    @Value("${resend.from-email}")
+    @Value("${brevo.from-email}")
     private String fromEmail;
 
-    public EmailService(
-            @Value("${resend.api-key}") String apiKey) {
+    @Value("${brevo.from-name}")
+    private String fromName;
 
-        this.resend = new Resend(apiKey);
-    }
+    private final HttpClient httpClient = HttpClient.newHttpClient();
 
     public void sendVerificationOtp(User user, String otp) {
 
@@ -35,7 +36,7 @@ public class EmailService {
                     <html>
                     <body style="font-family: Arial, sans-serif;">
 
-                        <h2>Welcome to Progress Tracker!</h2>
+                        <h2>Welcome to Tasks Tracker!</h2>
 
                         <p>Hello %s,</p>
 
@@ -75,23 +76,67 @@ public class EmailService {
                     </html>
                     """.formatted(name, otp);
 
-            CreateEmailOptions params =
-                    CreateEmailOptions.builder()
-                            .from(fromEmail)
-                            .to(user.getEmail())
-                            .subject("Progress Tracker - Verify Your Account")
-                            .html(html)
-                            .build();
+            String json = """
+                    {
+                        "sender": {
+                            "name": "%s",
+                            "email": "%s"
+                        },
+                        "to": [
+                            {
+                                "email": "%s",
+                                "name": "%s"
+                            }
+                        ],
+                        "subject": "Tasks Tracker - Verify Your Account",
+                        "htmlContent": "%s"
+                    }
+                    """.formatted(
+                            escapeJson(fromName),
+                            escapeJson(fromEmail),
+                            escapeJson(user.getEmail()),
+                            escapeJson(name),
+                            escapeJson(html)
+                    );
 
-            CreateEmailResponse response =
-                    resend.emails().send(params);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://api.brevo.com/v3/smtp/email"))
+                    .header("accept", "application/json")
+                    .header("api-key", apiKey)
+                    .header("content-type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
 
-            System.out.println(
-                    "Verification email sent. ID: "
-                    + response.getId()
-            );
+            HttpResponse<String> response =
+                    httpClient.send(
+                            request,
+                            HttpResponse.BodyHandlers.ofString()
+                    );
 
-        } catch (ResendException e) {
+            if (response.statusCode() >= 200 &&
+                response.statusCode() < 300) {
+
+                System.out.println(
+                        "Verification email sent successfully: "
+                        + response.body()
+                );
+
+            } else {
+
+                System.err.println(
+                        "Brevo email failed. Status: "
+                        + response.statusCode()
+                        + " Response: "
+                        + response.body()
+                );
+
+                throw new RuntimeException(
+                        "Unable to send verification email: "
+                        + response.body()
+                );
+            }
+
+        } catch (Exception e) {
 
             e.printStackTrace();
 
@@ -101,5 +146,19 @@ public class EmailService {
                     e
             );
         }
+    }
+
+    private String escapeJson(String value) {
+
+        if (value == null) {
+            return "";
+        }
+
+        return value
+                .replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t");
     }
 }
